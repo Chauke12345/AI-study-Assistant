@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quiz</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: white;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 650px;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 18px;
+        padding: 25px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .badge {
+        background: rgba(255,255,255,0.12);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 14px;
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    .question {
+        font-size: 1.3rem;
+        margin: 20px 0;
+        font-weight: 600;
+    }
+
+    .options {
+        display: grid;
+        gap: 12px;
+    }
+
+    button.option {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        transition: 0.3s ease;
+    }
+
+    button.option:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn {
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: 0.3s;
+    }
+
+    .reset {
+        background: #f59e0b;
+        color: black;
+    }
+
+    .reset:hover {
+        background: #fbbf24;
+    }
+
+    .exit {
+        background: #ef4444;
+        color: white;
+    }
+
+    .exit:hover {
+        background: #f87171;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="top">
+            <h2>Question {{ index }} of {{ total }}</h2>
+            <span class="badge">Progress</span>
+        </div>
+
+        <div class="question">
+            {{ question.question }}
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="options">
+                {% for opt in question.options %}
+                    <button class="option" type="submit" name="answer" value="{{ opt }}">
+                        {{ opt }}
+                    </button>
+                {% endfor %}
+            </div>
+        </form>
+
+        <div class="actions">
+            <a href="/quiz/" class="btn reset">🔄 Reset</a>
+            <a href="/" class="btn exit">🚪 Exit</a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

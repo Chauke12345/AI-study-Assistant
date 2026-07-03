@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Generator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: white;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 700px;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 18px;
+        padding: 30px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+        margin-bottom: 10px;
+        font-size: 1.8rem;
+    }
+
+    p.subtitle {
+        opacity: 0.7;
+        margin-bottom: 20px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 200px;
+        padding: 15px;
+        border-radius: 12px;
+        border: none;
+        outline: none;
+        resize: none;
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        backdrop-filter: blur(8px);
+    }
+
+    textarea::placeholder {
+        color: rgba(255,255,255,0.5);
+    }
+
+    button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #6366f1, #3b82f6);
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #4f46e5, #2563eb);
+    }
+
+    .error {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 10px;
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        font-weight: 600;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>🧠 Quiz Generator</h2>
+        <p class="subtitle">Paste your study material and generate a quiz instantly</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <textarea name="text" placeholder="Paste study text here..."></textarea>
+
+            <button type="submit">🚀 Start Quiz</button>
+        </form>
+
+        {% if error %}
+            <div class="error">
+                {{ error }}
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,10 +1,13 @@
 import os
+from dotenv import load_dotenv
 from groq import Groq
+
+load_dotenv()  # IMPORTANT
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 response = client.chat.completions.create(
-    model="llama3-70b-8192",
+    model="llama-3.1-8b-instant",
     messages=[{"role": "user", "content": "Say hello"}]
 )
 

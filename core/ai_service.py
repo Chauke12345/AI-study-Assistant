@@ -1,57 +1,67 @@
-import json
-import os
-from groq import Groq
-
-# -------------------------
-# Safe client init
-# -------------------------
-api_key = os.getenv("GROQ_API_KEY")
-
-client = Groq(api_key=api_key) if api_key else None
-
-if client is None:
-    print("⚠️ GROQ_API_KEY missing")
-
-
-# -------------------------
-# Prompt
-# -------------------------
-QUIZ_PROMPT = """
-Return ONLY valid JSON quiz with 5 questions.
-
-RULES:
-- Exactly 5 questions
-- Each question has 4 options (A, B, C, D)
-- Only ONE correct answer
-- Answer must be A, B, C or D
-- No explanations
-"""
-
-
-# -------------------------
-# Main function
-# -------------------------
-def generate_quiz(text):
-
-    if client is None:
-        return {"error": "API key missing"}
-
-    response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=[
-            {"role": "system", "content": QUIZ_PROMPT},
-            {"role": "user", "content": text}
+def generate_quiz(text: str):
+    FALLBACK = {
+        "questions": [
+            {
+                "question": "AI failed to generate quiz. Try again.",
+                "options": ["A", "B", "C", "D"],
+                "answer": "A"
+            }
         ]
-    )
-
-    content = response.choices[0].message.content
-
-    if not content:
-        return {"error": "Empty response"}
-
-    print("AI RAW OUTPUT:", content)
+    }
 
     try:
-        return json.loads(content)
-    except Exception:
-        return {"error": "Invalid JSON", "raw": content}
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": QUIZ_PROMPT},
+                {"role": "user", "content": text}
+            ],
+            temperature=0.2,
+        )
+
+        content = response.choices[0].message.content
+        data = extract_json(content)
+
+        if not data or "questions" not in data:
+            return FALLBACK
+
+        clean_questions = []
+
+        for q in data["questions"]:
+            if not isinstance(q, dict):
+                continue
+
+            question = q.get("question")
+            options = q.get("options")
+            answer = q.get("answer")
+
+            if not question or not isinstance(options, list) or not answer:
+                continue
+
+            if len(options) != 4:
+                continue
+
+            if answer not in options:
+                continue
+
+            clean_questions.append({
+                "question": question,
+                "options": options,
+                "answer": answer
+            })
+
+        if not clean_questions:
+            return FALLBACK
+
+        return {"questions": clean_questions}
+
+    except Exception as e:
+        return {
+            "questions": [
+                {
+                    "question": f"System error: {str(e)}",
+                    "options": ["A", "B", "C", "D"],
+                    "answer": "A"
+                }
+            ]
+        }

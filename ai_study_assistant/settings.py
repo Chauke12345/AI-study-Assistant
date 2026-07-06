@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")
 
 # DEBUG OFF in production (Render will control this)
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG =True
 
 # Render requires this
 ALLOWED_HOSTS = [

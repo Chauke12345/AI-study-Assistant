@@ -134,6 +134,15 @@
         background: #dc2626;
     }
 
+    .summary-box {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    margin-top: 15px;
+    line-height: 1.6;
+    border-radius: 10px;
+}
+
 </style>
 </head>
 
@@ -154,11 +163,13 @@
         </form>
 
         {% if summary %}
-        <div class="result">
-            <h3>🧠 Summary</h3>
-            <p>{{ summary }}</p>
-        </div>
-        {% endif %}
+<div class="result">
+    <h3>🧠 Summary</h3>
+    <div class="summary-box">
+        <p>{{ summary }}</p>
+    </div>
+</div>
+{% endif %}
 
         <!-- 🔙 Navigation Buttons -->
         <div class="nav-buttons">

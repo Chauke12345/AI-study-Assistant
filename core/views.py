@@ -113,7 +113,7 @@ def summarize(request):
 
     if request.method == "POST":
         text = request.POST.get("text", "").strip()
-        summary = text[:150] + "..." if text else ""
+        summary = text[:500] + "..." if text else ""
 
     return render(request, "core/summarize.html", {
         "text": text,
